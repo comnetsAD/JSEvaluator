@@ -14,35 +14,39 @@ class MyPanel(ScrolledPanel):
 		self.mainSizer = wx.BoxSizer(wx.VERTICAL)
 
 		# Visual similarity comparison
-		self.mainSizer.Add(wx.StaticText(self, label="How similar do the pages look?"), 0, wx.CENTER, 25)
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
+		self.mainSizer.Add(wx.StaticText(self, label="Rate the page look similarity:"), 0, wx.CENTER|wx.ALL, 25)
+		hbox = wx.BoxSizer(wx.VERTICAL)
 
 		self.visualSimilarity = []
-		self.visualSimilarity.append(wx.RadioButton(self, style=wx.RB_GROUP, label="Not similar"))
-		self.visualSimilarity.append(wx.RadioButton(self, label="Very similar"))
-		self.visualSimilarity.append(wx.RadioButton(self, label="Exactly the same"))
+		self.visualSimilarity.append(wx.RadioButton(self, style=wx.RB_GROUP, label="Not Similar (0% similar)"))
+		self.visualSimilarity.append(wx.RadioButton(self, label="25% Similar"))
+		self.visualSimilarity.append(wx.RadioButton(self, label="50% Similar"))
+		self.visualSimilarity.append(wx.RadioButton(self, label="75% Similar"))
+		self.visualSimilarity.append(wx.RadioButton(self, label="Exactly the same (100% similar)"))
 
 		for b in self.visualSimilarity:
-			hbox.Add(b, 0, wx.ALL, 25)
+			hbox.Add(b, 0)
 		
 		self.mainSizer.Add(hbox, 0, wx.RIGHT | wx.CENTER, 25)
 
 		# Content completion comparison
-		self.mainSizer.Add(wx.StaticText(self, label="How complete is the simplified page content?"), 0, wx.CENTER, 25)
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
+		self.mainSizer.Add(wx.StaticText(self, label="Rate the page content similarity:"), 0, wx.CENTER|wx.ALL, 25)
+		hbox = wx.BoxSizer(wx.VERTICAL)
 
 		self.contentCompleteness = []
-		self.contentCompleteness.append(wx.RadioButton(self, style=wx.RB_GROUP, label="Significant content missing"))
-		self.contentCompleteness.append(wx.RadioButton(self, label="Some content missing"))
-		self.contentCompleteness.append(wx.RadioButton(self, label="All content present"))
+		self.contentCompleteness.append(wx.RadioButton(self, style=wx.RB_GROUP, label="Content is completely missing (0% similar)"))
+		self.contentCompleteness.append(wx.RadioButton(self, label="Significant content is missing (25% similar)"))
+		self.contentCompleteness.append(wx.RadioButton(self, label="Half of the content is missing (50% similar)"))
+		self.contentCompleteness.append(wx.RadioButton(self, label="Some content is missing (75% similar)"))
+		self.contentCompleteness.append(wx.RadioButton(self, label="All content is completely preserved (100% similar)"))
 
 		for b in self.contentCompleteness:
-			hbox.Add(b, 0, wx.ALL, 25)
+			hbox.Add(b, 0)
 
 		self.mainSizer.Add(hbox, 0, wx.RIGHT | wx.CENTER, 25)
 		
 		# Identify types of missing content
-		self.mainSizer.Add(wx.StaticText(self, label="What types of content are missing? Check all that apply."), 0, wx.CENTER, 25)
+		self.mainSizer.Add(wx.StaticText(self, label="What types of content are missing? Check all that apply."), 0, wx.CENTER|wx.ALL, 25)
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		self.contentTypes = []
 		self.contentTypes.append(wx.CheckBox(self, label="Text"))
@@ -51,7 +55,7 @@ class MyPanel(ScrolledPanel):
 		self.contentTypes.append(wx.CheckBox(self, label="Video"))
 		self.contentTypes.append(wx.CheckBox(self, label="Layout/beautifiers"))
 		self.contentTypes.append(wx.CheckBox(self, label="Images"))
-		self.contentTypes.append(wx.CheckBox(self, label="Other iframe embeds (i.e. maps, tweets)"))
+		self.contentTypes.append(wx.CheckBox(self, label="Other embeds (i.e. maps, tweets)"))
 
 		for c in self.contentTypes:
 			vbox.Add(c, 0, wx.LEFT)
@@ -61,30 +65,29 @@ class MyPanel(ScrolledPanel):
 		vbox = wx.BoxSizer(wx.VERTICAL)
 		hbox = wx.BoxSizer(wx.HORIZONTAL)
 
-		instruction = wx.StaticText(self, label="In the left window, identify the number of menu / navigation elements there are:")
-		vbox.Add(instruction, 0, wx.BOTTOM, 5)
-		instruction = wx.StaticText(self, label="In the right window, identify the number of menu / navigation elements that behave the same way:")
-		vbox.Add(instruction, 0, wx.BOTTOM, 5)
-		instruction = wx.StaticText(self, label="In the left window, identify the number of search bars there are:")
-		vbox.Add(instruction, 0, wx.BOTTOM, 5)
-		instruction = wx.StaticText(self, label="In the right window, identify the number of search bars that behave the same way:")
-		vbox.Add(instruction, 0, wx.BOTTOM, 5)
-		instruction = wx.StaticText(self, label="In the left window, identify the number of image scrollers / galleries there are:")
-		vbox.Add(instruction, 0, wx.BOTTOM, 5)
-		instruction = wx.StaticText(self, label="In the right window, identify the number of image scrollers / galleries that behave the same way:")
+		instruction = wx.StaticText(self, label="Identify the number of menu / navigation elements:")
+		vbox.Add(instruction, 0, wx.TOP, 20)
+		instruction = wx.StaticText(self, label="Identify the number of search bars:")
+		vbox.Add(instruction, 0, wx.BOTTOM|wx.TOP, 5)
+		instruction = wx.StaticText(self, label="Identify the number of image scrollers / galleries:")
 		vbox.Add(instruction, 0, wx.BOTTOM, 5)
 
 		hbox.Add(vbox, 0, wx.ALIGN_LEFT | wx.RIGHT, 25)
 
 		self.inputs = []
-		vbox = wx.BoxSizer(wx.VERTICAL)
-		for i in range(6):
-			user_input = wx.TextCtrl(self)
-			user_input.Size.SetWidth(20)
-			self.inputs.append(user_input)
-			vbox.Add(user_input, 0)
+		for j in range(2):
+			vbox = wx.BoxSizer(wx.VERTICAL)
+			if j == 0:
+				vbox.Add(wx.StaticText(self, label="Left window"))
+			else:
+				vbox.Add(wx.StaticText(self, label="Right window"))
+			for i in range(3):
+				user_input = wx.TextCtrl(self)
+				user_input.Size.SetWidth(20)
+				self.inputs.append(user_input)
+				vbox.Add(user_input, 0)
 
-		hbox.Add(vbox, 0)
+			hbox.Add(vbox, 0)
 
 		self.mainSizer.Add(hbox, 0, wx.ALL | wx.CENTER, 25)
 
@@ -103,13 +106,6 @@ class MyPanel(ScrolledPanel):
 
 		self.analyze()
 
-	def on_key_press(self, event):
-		keycode = event.GetKeyCode()
-		if keycode == wx.WXK_RETURN or keycode == wx.WXK_NUMPAD_ENTER:
-			self.analyze()
-		else:
-			event.Skip()
-
 	def analyze(self):
 		self.url = random.choice(sites)
 		print(self.url)
@@ -127,10 +123,10 @@ class MyPanel(ScrolledPanel):
 
 	def on_submit(self, event):
 		self.msg_box.SetLabel("Please wait... loading page")
-		with open('results.csv', 'a') as file:
+		with open('results.csv', 'a+') as file:
 			try:
-				vs = [b.GetValue() for b in self.visualSimilarity].index(True)
-				cc = [b.GetValue() for b in self.contentCompleteness].index(True)
+				vs = [b.GetValue() for b in self.visualSimilarity].index(True)*25
+				cc = [b.GetValue() for b in self.contentCompleteness].index(True)*25
 				mc = [c.GetValue() for c in self.contentTypes]
 				ans = []
 				for i in self.inputs:
