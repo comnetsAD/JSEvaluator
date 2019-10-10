@@ -130,6 +130,8 @@ class MyPanel(ScrolledPanel):
 
 		self.visualSlider.SetValue(10)
 		self.contentSlider.SetValue(10)
+		for c in self.contentTypes:
+			c.SetValue(False)
 		for i in self.inputs:
 			i.SetValue("")
 		self.msg_box.SetLabel("")
