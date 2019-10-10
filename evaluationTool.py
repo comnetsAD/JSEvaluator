@@ -15,35 +15,23 @@ class MyPanel(ScrolledPanel):
 
 		# Visual similarity comparison
 		self.mainSizer.Add(wx.StaticText(self, label="Rate the page look similarity:"), 0, wx.CENTER|wx.ALL, 25)
-		hbox = wx.BoxSizer(wx.VERTICAL)
-
-		self.visualSimilarity = []
-		self.visualSimilarity.append(wx.RadioButton(self, style=wx.RB_GROUP, label="Not Similar (0% similar)"))
-		self.visualSimilarity.append(wx.RadioButton(self, label="25% Similar"))
-		self.visualSimilarity.append(wx.RadioButton(self, label="50% Similar"))
-		self.visualSimilarity.append(wx.RadioButton(self, label="75% Similar"))
-		self.visualSimilarity.append(wx.RadioButton(self, label="Exactly the same (100% similar)"))
-
-		for b in self.visualSimilarity:
-			hbox.Add(b, 0)
 		
-		self.mainSizer.Add(hbox, 0, wx.RIGHT | wx.CENTER, 25)
+		hbox = wx.BoxSizer(wx.HORIZONTAL)
+		hbox.Add(wx.StaticText(self, label="Not similar"))
+		self.visualSlider = wx.Slider(self, value=10, maxValue=10, style=wx.SL_LABELS)
+		hbox.Add(self.visualSlider, 0)
+		hbox.Add(wx.StaticText(self, label="Exactly the same"))
+		self.mainSizer.Add(hbox, 0, wx.CENTER)
 
 		# Content completion comparison
 		self.mainSizer.Add(wx.StaticText(self, label="Rate the page content similarity:"), 0, wx.CENTER|wx.ALL, 25)
-		hbox = wx.BoxSizer(wx.VERTICAL)
-
-		self.contentCompleteness = []
-		self.contentCompleteness.append(wx.RadioButton(self, style=wx.RB_GROUP, label="Content is completely missing (0% similar)"))
-		self.contentCompleteness.append(wx.RadioButton(self, label="Significant content is missing (25% similar)"))
-		self.contentCompleteness.append(wx.RadioButton(self, label="Half of the content is missing (50% similar)"))
-		self.contentCompleteness.append(wx.RadioButton(self, label="Some content is missing (75% similar)"))
-		self.contentCompleteness.append(wx.RadioButton(self, label="All content is completely preserved (100% similar)"))
-
-		for b in self.contentCompleteness:
-			hbox.Add(b, 0)
-
-		self.mainSizer.Add(hbox, 0, wx.RIGHT | wx.CENTER, 25)
+		
+		hbox = wx.BoxSizer(wx.HORIZONTAL)
+		hbox.Add(wx.StaticText(self, label="Not similar"))
+		self.contentSlider = wx.Slider(self, value=10, maxValue=10, style=wx.SL_LABELS)
+		hbox.Add(self.contentSlider, 0)
+		hbox.Add(wx.StaticText(self, label="Exactly the same"))
+		self.mainSizer.Add(hbox, 0, wx.CENTER, 25)
 		
 		# Identify types of missing content
 		self.mainSizer.Add(wx.StaticText(self, label="What types of content are missing? Check all that apply."), 0, wx.CENTER|wx.ALL, 25)
@@ -104,7 +92,7 @@ class MyPanel(ScrolledPanel):
 		self.SetSizer(self.mainSizer)
 		self.SetupScrolling()
 
-		self.analyze()
+		# self.analyze()
 
 	def analyze(self):
 		self.url = random.choice(sites)
@@ -125,8 +113,6 @@ class MyPanel(ScrolledPanel):
 		self.msg_box.SetLabel("Please wait... loading page")
 		with open('results.csv', 'a+') as file:
 			try:
-				vs = [b.GetValue() for b in self.visualSimilarity].index(True)*25
-				cc = [b.GetValue() for b in self.contentCompleteness].index(True)*25
 				mc = [c.GetValue() for c in self.contentTypes]
 				ans = []
 				for i in self.inputs:
@@ -136,18 +122,18 @@ class MyPanel(ScrolledPanel):
 			except ValueError:
 				self.msg_box.SetLabel("Please answer all questions")
 				return
-			print(self.url, file=file, end=',')
-			print(vs, cc, file=file, sep=',', end=',')
+			# print(self.url, file=file, end=',')
+			print(str(self.visualSlider.GetValue())+ ',' + str(self.contentSlider.GetValue()), file=file, end=',')
 			for i in mc + ans:
 				print(i, file=file, end=',')
 			print(datetime.now(), file=file)
 
-		for b in self.visualSimilarity + self.contentCompleteness + self.contentTypes:
-			b.SetValue(False)
+		self.visualSlider.SetValue(10)
+		self.contentSlider.SetValue(10)
 		for i in self.inputs:
 			i.SetValue("")
 		self.msg_box.SetLabel("")
-		self.analyze()
+		# self.analyze()
 
 class MyFrame(wx.Frame):
 	def __init__(self):
@@ -181,32 +167,32 @@ if __name__ == "__main__":
 	app = wx.App(False)
 	width, height = wx.GetDisplaySize()
 	
-	options = FirefoxOptions()
-	options.log.level = "trace"
-	options.add_argument("--width="+str(width/2))
-	options.add_argument("--height="+str(height))
+	# options = FirefoxOptions()
+	# options.log.level = "trace"
+	# options.add_argument("--width="+str(width/2))
+	# options.add_argument("--height="+str(height))
 
-	# start selenium firefox web driver
-	fp1 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/kciui8dl.default")
-	fp2 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/7irvo3ii.Simplified")
-	# fp.set_preference("devtools.toolbox.selectedTool", "netmonitor")
-	# fp.set_preference("browser.cache.disk.enable", False)
-	# fp.set_preference("browser.cache.memory.enable", False)
-	# fp.set_preference("browser.cache.offline.enable", False)
-	# fp.set_preference("network.http.use-cache", False)
-	driver1 = webdriver.Firefox(options=options, firefox_profile=fp1)
-	driver2 = webdriver.Firefox(options=options, firefox_profile=fp2)
-	driver1.set_window_position(0, 0)
-	driver2.set_window_position(width/2, 0)
+	# # start selenium firefox web driver
+	# fp1 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/kciui8dl.default")
+	# fp2 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/7irvo3ii.Simplified")
+	# # fp.set_preference("devtools.toolbox.selectedTool", "netmonitor")
+	# # fp.set_preference("browser.cache.disk.enable", False)
+	# # fp.set_preference("browser.cache.memory.enable", False)
+	# # fp.set_preference("browser.cache.offline.enable", False)
+	# # fp.set_preference("network.http.use-cache", False)
+	# driver1 = webdriver.Firefox(options=options, firefox_profile=fp1)
+	# driver2 = webdriver.Firefox(options=options, firefox_profile=fp2)
+	# driver1.set_window_position(0, 0)
+	# driver2.set_window_position(width/2, 0)
 
-	# Open a random site from the top 500
-	f = open("top500.csv", 'r')
-	sites = f.read().split()
-	f.close()
+	# # Open a random site from the top 500
+	# f = open("top500.csv", 'r')
+	# sites = f.read().split()
+	# f.close()
 
 	frame = MyFrame()
-	frame.SetSize(800, 500)
+	frame.SetSize(800, 650)
 
 	app.MainLoop()
-	driver1.quit()
-	driver2.quit()
+	# driver1.quit()
+	# driver2.quit()
