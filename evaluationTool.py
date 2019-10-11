@@ -92,10 +92,12 @@ class MyPanel(ScrolledPanel):
 		self.SetSizer(self.mainSizer)
 		self.SetupScrolling()
 
-		# self.analyze()
+		self.analyze()
 
 	def analyze(self):
 		self.url = random.choice(sites)
+		self.url = sites[cnt]
+		cnt = cnt + 1 % len(sites)
 		print(self.url)
 		try:
 			driver1.get(self.url)
@@ -122,7 +124,7 @@ class MyPanel(ScrolledPanel):
 			except ValueError:
 				self.msg_box.SetLabel("Please answer all questions")
 				return
-			# print(self.url, file=file, end=',')
+			print(self.url, file=file, end=',')
 			print(str(self.visualSlider.GetValue())+ ',' + str(self.contentSlider.GetValue()), file=file, end=',')
 			for i in mc + ans:
 				print(i, file=file, end=',')
@@ -135,7 +137,7 @@ class MyPanel(ScrolledPanel):
 		for i in self.inputs:
 			i.SetValue("")
 		self.msg_box.SetLabel("")
-		# self.analyze()
+		self.analyze()
 
 class MyFrame(wx.Frame):
 	def __init__(self):
@@ -174,27 +176,28 @@ if __name__ == "__main__":
 	# options.add_argument("--width="+str(width/2))
 	# options.add_argument("--height="+str(height))
 
-	# # start selenium firefox web driver
-	# fp1 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/kciui8dl.default")
-	# fp2 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/7irvo3ii.Simplified")
-	# # fp.set_preference("devtools.toolbox.selectedTool", "netmonitor")
-	# # fp.set_preference("browser.cache.disk.enable", False)
-	# # fp.set_preference("browser.cache.memory.enable", False)
-	# # fp.set_preference("browser.cache.offline.enable", False)
-	# # fp.set_preference("network.http.use-cache", False)
-	# driver1 = webdriver.Firefox(options=options, firefox_profile=fp1)
-	# driver2 = webdriver.Firefox(options=options, firefox_profile=fp2)
-	# driver1.set_window_position(0, 0)
-	# driver2.set_window_position(width/2, 0)
+	# start selenium firefox web driver
+	fp1 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/kciui8dl.default")
+	fp2 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/7irvo3ii.Simplified")
+	# fp.set_preference("devtools.toolbox.selectedTool", "netmonitor")
+	# fp.set_preference("browser.cache.disk.enable", False)
+	# fp.set_preference("browser.cache.memory.enable", False)
+	# fp.set_preference("browser.cache.offline.enable", False)
+	# fp.set_preference("network.http.use-cache", False)
+	driver1 = webdriver.Firefox(options=options, firefox_profile=fp1)
+	driver2 = webdriver.Firefox(options=options, firefox_profile=fp2)
+	driver1.set_window_position(0, 0)
+	driver2.set_window_position(width/2, 0)
 
-	# # Open a random site from the top 500
-	# f = open("top500.csv", 'r')
-	# sites = f.read().split()
-	# f.close()
+	# Open a random site from the top 500
+	f = open("top25.txt", 'r')
+	sites = f.read().split()
+	cnt = 0
+	f.close()
 
 	frame = MyFrame()
 	frame.SetSize(800, 650)
 
 	app.MainLoop()
-	# driver1.quit()
-	# driver2.quit()
+	driver1.quit()
+	driver2.quit()
