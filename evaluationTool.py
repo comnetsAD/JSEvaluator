@@ -171,10 +171,10 @@ if __name__ == "__main__":
 	app = wx.App(False)
 	width, height = wx.GetDisplaySize()
 	
-	# options = FirefoxOptions()
-	# options.log.level = "trace"
-	# options.add_argument("--width="+str(width/2))
-	# options.add_argument("--height="+str(height))
+	options = FirefoxOptions()
+	options.log.level = "trace"
+	options.add_argument("--width="+str(width/2))
+	options.add_argument("--height="+str(height))
 
 	# start selenium firefox web driver
 	fp1 = webdriver.FirefoxProfile("/Users/Jacinta/Library/Application Support/Firefox/Profiles/kciui8dl.default")
