@@ -91,13 +91,13 @@ class MyPanel(ScrolledPanel):
 
 		self.SetSizer(self.mainSizer)
 		self.SetupScrolling()
-
+		self.cnt = 0
 		self.analyze()
 
 	def analyze(self):
 		self.url = random.choice(sites)
-		self.url = sites[cnt]
-		cnt = cnt + 1 % len(sites)
+		self.url = sites[self.cnt]
+		self.cnt = self.cnt + 1 % len(sites)
 		print(self.url)
 		try:
 			driver1.get(self.url)
@@ -192,7 +192,6 @@ if __name__ == "__main__":
 	# Open a random site from the top 500
 	f = open("top25.txt", 'r')
 	sites = f.read().split()
-	cnt = 0
 	f.close()
 
 	frame = MyFrame()
